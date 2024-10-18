@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Special Wish</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+        }
+        h1 {
+            color: #28a745;
+        }
+        p {
+            font-size: 1.2em;
+        }
+        .sender {
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .btn {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="occasionMessage">Special Wish!</h1>
+        <p id="wishMessage"></p>
+        <p class="sender" id="senderName"></p>
+        <button class="btn" onclick="window.location.href='index.html'">Go to Home</button>
+    </div>
+
+    <script>
+        // Function to get URL parameters
+        function getQueryParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                recipient: params.get('recipient'),
+                message: params.get('message'),
+                sender: params.get('sender')
+            };
+        }
+
+        // Set message details based on query parameters
+        const { recipient, message, sender } = getQueryParams();
+
+        if (recipient && message && sender) {
+            document.getElementById('occasionMessage').innerText = `Special Wish for ${recipient}`;
+            document.getElementById('wishMessage').innerText = message;
+            document.getElementById('senderName').innerText = `From ${sender}`;
+        } else {
+            document.getElementById('occasionMessage').innerText = 'Invalid Wish Link';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Your Wish</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .btn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .share-btns {
+            margin-top: 20px;
+            display: none; /* Hidden until link is generated */
+        }
+        .share-btns button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .share-btns button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Create Your Special Wish</h1>
+        <form id="wishForm">
+            <label for="recipient">Recipient's Name:</label>
+            <input type="text" id="recipient" name="recipient" required>
+
+            <label for="message">Your Special Message:</label>
+            <textarea id="message" name="message" rows="4" required></textarea>
+
+            <label for="sender">Your Name:</label>
+            <input type="text" id="sender" name="sender" required>
+
+            <button type="button" class="btn" onclick="generateLink()">Generate Wish Link</button>
+        </form>
+
+        <div class="share-btns" id="shareLinks">
+            <p>Share this wish with your friends:</p>
+            <a href="#" id="wishLink" target="_blank"></a>
+            <button id="shareButton">Share</button>
+        </div>
+    </div>
+
+    <script>
+        let generatedLink = '';
+
+        function generateLink() {
+            const recipient = document.getElementById('recipient').value;
+            const message = document.getElementById('message').value;
+            const sender = document.getElementById('sender').value;
+
+            // Generate a URL with query parameters
+            const baseUrl = window.location.origin + '/wish_message.html';
+            const queryParams = `?recipient=${encodeURIComponent(recipient)}&message=${encodeURIComponent(message)}&sender=${encodeURIComponent(sender)}`;
+            generatedLink = baseUrl + queryParams;
+
+            // Set the link
+            const wishLinkElement = document.getElementById('wishLink');
+            wishLinkElement.href = generatedLink;
+            wishLinkElement.innerText = generatedLink;
+
+            // Show the share section and hide the form
+            document.getElementById('shareLinks').style.display = 'block';
+            document.getElementById('wishForm').style.display = 'none';
+        }
+
+        // Share functionality
+        document.getElementById('shareButton').addEventListener('click', function() {
+            if (navigator.share) {
+                // Use the Web Share API for modern browsers
+                navigator.share({
+                    title: 'Special Wish',
+                    text: 'I have sent you a special wish! Check it out:',
+                    url: generatedLink,
+                })
+                .then(() => {
+                    console.log('Link shared successfully');
+                    resetForm(); // Reset form and show it again
+                })
+                .catch((error) => {
+                    console.error('Error sharing:', error);
+                    resetForm(); // Reset form even if there's an error
+                });
+            } else {
+                // Manual sharing fallback
+                alert('Web Share API is not supported in your browser. Please copy the link and share it manually.');
+                resetForm(); // Reset form for manual sharing
+            }
+        });
+
+        // Function to reset the form after sharing
+        function resetForm() {
+            // Reset form fields
+            document.getElementById('wishForm').reset();
+
+            // Hide the share section
+            document.getElementById('shareLinks').style.display = 'none';
+
+            // Show the form again for new input
+            document.getElementById('wishForm').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
